@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "id": "forcesettings",
+  "version": "${version}",
+  "name": "Force Settings Override",
+  "description": "Forces all resource packs ON and locks clouds off, 210 FPS, cutout leaves off, decreased particles.",
+  "authors": ["You"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.example.forcesettings.ForceSettings"]
+  },
+  "mixins": ["forcesettings.mixins.json"],
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
