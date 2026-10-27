@@ -4,6 +4,7 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackRepository;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public abstract class PackRepositoryMixin {
         List<String> all = new ArrayList<>();
         for (String id : this.available.keySet()) {
             // Built-in accessibility packs replace vanilla textures, so skip them.
-            // Delete this if you really want literally everything forced on.
+            // Delete this line if you really want literally everything forced on.
             if (id.contains("programmer_art") || id.contains("high_contrast")) continue;
             all.add(id);
         }
