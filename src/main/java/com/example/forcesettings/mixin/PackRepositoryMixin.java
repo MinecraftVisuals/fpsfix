@@ -18,20 +18,50 @@ public abstract class PackRepositoryMixin {
     @Shadow
     private Map<String, Pack> available;
 
-    /**
-     * Whenever the repository rebuilds its selected list (on load, reload,
-     * or when you press Done in the pack screen), replace the requested
-     * list with EVERY available pack.
-     */
     @ModifyVariable(method = "rebuildSelected", at = @At("HEAD"), argsOnly = true)
     private Collection<String> forcesettings$forceAll(Collection<String> requested) {
-        List<String> all = new ArrayList<>();
-        for (String id : this.available.keySet()) {
-            // Built-in accessibility packs replace vanilla textures, so skip them.
-            // Delete this line if you really want literally everything forced on.
-            if (id.contains("programmer_art") || id.contains("high_contrast")) continue;
-            all.add(id);
+        List<String> vanilla = new ArrayList<>();
+        List<String> builtIn = new ArrayList<>();
+        List<String> userPacks = new ArrayList<>();
+
+        for (Map.Entry<String, Pack> entry : this.available.entrySet()) {
+            String id = entry.getKey();
+            Pack pack = entry.getValue();
+
+            String title = "";
+            try {
+                title = pack.getTitle().getString();
+            } catch (Throwable ignored) {
+            }
+
+            // Packs that must stay OFF
+            if (forcesettings$isBlocked(id) || forcesettings$isBlocked(title)) continue;
+
+            if (id.equals("vanilla")) {
+                // Default Minecraft pack: goes at the very bottom
+                vanilla.add(id);
+            } else if (id.startsWith("file/")) {
+                // Your resource packs from the resourcepacks folder
+                userPacks.add(id);
+            } else {
+                // Mod built-in packs
+                builtIn.add(id);
+            }
         }
+
+        // First in the list = bottom of the stack
+        List<String> all = new ArrayList<>();
+        all.addAll(vanilla);
+        all.addAll(builtIn);
+        all.addAll(userPacks);
         return all;
+    }
+
+    private static boolean forcesettings$isBlocked(String name) {
+        String n = name.toLowerCase().replace("_", " ").replace("-", " ");
+        return n.contains("programmer art")
+                || n.contains("high contrast")
+                || n.contains("classic icons")
+                || n.contains("white icons");
     }
 }
