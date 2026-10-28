@@ -34,9 +34,9 @@ public class ForceSettings implements ClientModInitializer {
             changed = true;
         }
 
-        // See-through (cutout) leaves OFF
-        if (o.cutoutLeaves().get()) {
-            o.cutoutLeaves().set(false);
+        // See-through (cutout) leaves ON
+        if (!o.cutoutLeaves().get()) {
+            o.cutoutLeaves().set(true);
             changed = true;
         }
 
